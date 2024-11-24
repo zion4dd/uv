@@ -2,14 +2,19 @@ FROM python:3.8-slim
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-COPY ./pyproject.toml /pyproject.toml
+COPY pyproject.toml .
 
-COPY ./uv.lock /uv.lock
+ENV UV_SYSTEM_PYTHON=1
 
-RUN uv sync --frozen
+RUN uv pip install -r pyproject.toml
 
 COPY ./src /app
 
 WORKDIR /app
 
-CMD ["uv", "run", "hello.py"]
+CMD ["python", "hello.py"]
+
+# with .venv
+# COPY ./uv.lock /uv.lock
+# RUN uv sync --frozen
+# CMD ["uv", "run", "hello.py"]
